@@ -219,7 +219,7 @@ PN532.prototype.findCardsAllBytes = function(callback) {
             ]);
   var p = this;
   setTimeout(function() { // wait for NFC poll (30ms)
-    var d = p.i2c.readFrom(C.PN532_I2C_ADDRESS, 512);
+    var d = p.i2c.readFrom(C.PN532_I2C_ADDRESS, 12);
     callback(d);
   }, 30);
 };
