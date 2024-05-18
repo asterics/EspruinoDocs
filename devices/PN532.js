@@ -209,4 +209,22 @@ PN532.prototype.findCards = function(callback) {
   }, 30);
 };
 
+/*
+  function to read all bytes of an NDEF message.
+*/
+PN532.prototype.findCardsAllBytes = function(callback) {
+  this.cmd([C.PN532_COMMAND_INLISTPASSIVETARGET,
+             1, // max targets (max=2)
+             C.PN532_BRTY_ISO14443A // modulation type
+            ]);
+  var p = this;
+  setTimeout(function() { // wait for NFC poll (30ms)
+    var d = p.i2c.readFrom(C.PN532_I2C_ADDRESS, 20+1).slice(1);
+    if (d[6]==C.PN532_COMMAND_INLISTPASSIVETARGET+1) {
+      if (d[7]!=1) print("Expecting 1 tag, got "+d[7]);
+      callback(d);
+    }
+  }, 30);
+};
+
 exports.connect = function(/*=I2C*/i2c) { return new PN532(i2c); }
